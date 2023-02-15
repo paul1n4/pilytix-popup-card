@@ -6,7 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, styled} from '@mui/material';
+import {Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, styled, Typography} from '@mui/material';
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryGroup, VictoryStack} from 'victory';
 
 import * as opportunities from "./opportunities.json";
 
@@ -23,6 +24,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function BasicTable() {
   const [open, setOpen] = useState(false)
   const [opportunityInfo, setOpportunityInfo] = useState({})
+  const [probHistory, setProbHistory] = useState([])
+  const [increasingWin, setIncreasingWin] = useState([])
+  const [decreasingWin, setDecreasingWin] = useState([])
   /**
    * A basic table to display all non-nested information from opportunities.json
    */
@@ -32,6 +36,13 @@ export default function BasicTable() {
     setOpen(true);
     setOpportunityInfo(row)
     console.log("row", row);
+    const probabilityHistory = row.probabilityHistory
+    setProbHistory(probabilityHistory)
+    console.log(probabilityHistory);
+    const factorsIncreasingWin = row.pilytixFactorsIncreasingWin
+    setIncreasingWin(factorsIncreasingWin)
+    const factorsDecreasingWin = row.pilytixFactorsDecreasingWin
+    setDecreasingWin(factorsDecreasingWin)
   }
 
   return (
@@ -80,8 +91,78 @@ export default function BasicTable() {
           aria-labelledby="dialog-title" aria-describedby="dialog-description">
             <DialogTitle id='dialog-title'>dfghj</DialogTitle>
             <DialogContent>
-              <DialogContentText id='dialog-description'>lorem ipsum</DialogContentText>
-              <DialogContentText id='dialog-description'>{opportunityInfo.oppName}</DialogContentText>
+              <Typography>
+                <span>oppId: </span> {opportunityInfo.oppId}
+              </Typography>
+              <Typography>
+                <span>oppName: </span> {opportunityInfo.oppName}
+              </Typography>
+              <Typography>
+                <span>salesRepName: </span> {opportunityInfo.salesRepName}
+              </Typography>
+              <Typography>
+                <span>amount: </span> {opportunityInfo.amount}
+              </Typography>
+              <Typography>
+                <span>product: </span> {opportunityInfo.product}
+              </Typography>
+              <Typography>
+                <span>stage: </span> {opportunityInfo.stage}
+              </Typography>
+              <Typography>
+                <span>repProbability: </span> {opportunityInfo.repProbability}
+              </Typography>
+              <Typography>
+                <span>pilytixTier: </span> {opportunityInfo.pilytixTier}
+              </Typography>
+              <Typography>
+                <span>pilytixProbability: </span> {opportunityInfo.pilytixProbability}
+              </Typography>
+              <Typography>
+                probabilityHistory:  
+              </Typography>
+             {/*  <VictoryChart>
+                <VictoryGroup offset={20}>
+                  <VictoryStack>
+                    <VictoryBar
+                    data={probHistory}
+                    x="daysAgo"
+                    y="pilytixProb"
+                    />
+                  </VictoryStack>
+                  <VictoryStack>
+                    <VictoryBar
+                    data={probHistory}
+                    x="daysAgo"
+                    y="repProb"
+                    />
+                  </VictoryStack>
+                  <VictoryStack>
+                    <VictoryBar
+                    data={probHistory}
+                    x="daysAgo"
+                    y="pilytixProb"
+                    />
+                  </VictoryStack>
+                </VictoryGroup>
+              </VictoryChart> */}
+              <VictoryBar
+                data={probHistory}
+                x="daysAgo"
+                y="pilytixProb"
+              />
+              <Typography>
+                {probHistory.map(probability => 
+                  <Typography>{probability.daysAgo}</Typography>
+                )}
+              </Typography>
+              <Typography>
+                <span>pilytixFactorsIncreasingWin: </span> 
+              </Typography>
+              <Typography>
+                <span>pilytixFactorsDecreasingWin: </span> 
+              </Typography>
+              
             </DialogContent>
             <DialogActions>
               <Button onClick={()=> setOpen(false)}>Cancel</Button>

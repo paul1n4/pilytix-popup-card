@@ -11,14 +11,20 @@ import { VictoryBar, VictoryChart, VictoryTheme, VictoryGroup, VictoryStack} fro
 
 import * as opportunities from "./opportunities.json";
 
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: '#F9FAFE',
   },
   // hide last border
   '&:last-child td, &:last-child th': {
     border: 0,
   },
+  'td, th': {
+    border: 0,
+    color: '#838FA8'
+  },
+
 }));
 
 export default function BasicTable() {
@@ -46,7 +52,7 @@ export default function BasicTable() {
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>

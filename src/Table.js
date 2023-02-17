@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, styled, Typography} from '@mui/material';
+import {Button, Dialog, DialogTitle, DialogContent, DialogActions, styled, Typography, Box} from '@mui/material';
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryGroup, VictoryStack} from 'victory';
 
 import * as opportunities from "./opportunities.json";
@@ -39,12 +39,12 @@ export default function BasicTable() {
   const data = opportunities.default;
 
   function handleRowClick(event, row) {
+    
     setOpen(true);
     setOpportunityInfo(row)
     console.log("row", row);
     const probabilityHistory = row.probabilityHistory
     setProbHistory(probabilityHistory)
-    console.log(probabilityHistory);
     const factorsIncreasingWin = row.pilytixFactorsIncreasingWin
     setIncreasingWin(factorsIncreasingWin)
     const factorsDecreasingWin = row.pilytixFactorsDecreasingWin
@@ -75,10 +75,7 @@ export default function BasicTable() {
               hover
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              
-              <TableCell component="th" scope="row">
-                {row.oppName}
-              </TableCell>
+              <TableCell component="th" scope="row">{row.oppName}</TableCell>
               <TableCell align="left">{row.stage}</TableCell>
               <TableCell align="right">{row.repProbability}</TableCell>
               <TableCell align="right">{row.pilytixProbability}</TableCell>
@@ -86,9 +83,7 @@ export default function BasicTable() {
               <TableCell align="right">{row.amount}</TableCell>
               <TableCell align="left">{row.product}</TableCell>
               <TableCell align="left">{row.salesRepName}</TableCell>
-              
             </StyledTableRow>
-            
           ))}
           <Dialog 
           open={open}
@@ -98,7 +93,8 @@ export default function BasicTable() {
           aria-labelledby="dialog-title" aria-describedby="dialog-description">
             <DialogTitle id='dialog-title' align="center">Opp Id: {opportunityInfo.oppId}</DialogTitle>
             <DialogContent>
-              <TableContainer component={Paper} sx={{ mb: 9 }}>
+              <Box>
+                <TableContainer component={Paper} sx={{ mb: 9 }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
@@ -125,101 +121,127 @@ export default function BasicTable() {
                     </StyledTableRow>
                   </TableBody>
                 </Table>
-              </TableContainer>
-             
-              <Typography align="center">Pilytix Factors Increasing Win</Typography>
-              <TableContainer component={Paper} sx={{ mb: 9 }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left" colSpan={1}>Name</TableCell>
-                      <TableCell align="left" colSpan={1}>Message</TableCell>
-                      <TableCell align="center" colSpan={2}>Weight</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                      <TableCell align="center">Value</TableCell>
-                      <TableCell align="left">Description</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {increasingWin.map(({ name, message, weight: { description, value}}, index) => (
-                      <StyledTableRow
-                      key={index}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">{name}</TableCell>
-                        <TableCell align="left">{message}</TableCell>
-                        <TableCell align="center">{value}</TableCell>
-                        <TableCell align="left">{description}</TableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              
-              <Typography align="center">Pilytix Factors Decreasing Win:</Typography>
-              <TableContainer component={Paper} sx={{ mb: 9 }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left" colSpan={1}>Name</TableCell>
-                      <TableCell align="left" colSpan={1}>Message</TableCell>
-                      <TableCell align="center" colSpan={2}>Weight</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                      <TableCell align="center">Value</TableCell>
-                      <TableCell align="left">Description</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {decreasingWin.map(({ name, message, weight: { description, value}}, index) => (
-                      <StyledTableRow
-                      key={index}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">{name}</TableCell>
-                        <TableCell align="left">{message}</TableCell>
-                        <TableCell align="center">{value}</TableCell>
-                        <TableCell align="left">{description}</TableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                </TableContainer>
+              </Box>
 
-              <Typography align="center">Probability History</Typography>
-              <TableContainer component={Paper} sx={{ mb: 2 }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left">Days Ago</TableCell>
-                      <TableCell align="left">Pilytix Prob</TableCell>
-                      <TableCell align="center">Rep Prob</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {probHistory.map((row, index) => (
-                      <StyledTableRow
-                      key={index}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">{row.daysAgo}</TableCell>
-                        <TableCell align="left">{row.pilytixProb}</TableCell>
-                        <TableCell align="center">{row.repProb}</TableCell>
-                      </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <VictoryBar
-                data={probHistory}
-                x="daysAgo"
-                y="pilytixProb"
-              />
+              {increasingWin ? (
+                <Box>
+                  <Typography align="center">Pilytix Factors Increasing Win</Typography>
+                  <TableContainer component={Paper} sx={{ mb: 9 }}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="left" colSpan={1}>Name</TableCell>
+                          <TableCell align="left" colSpan={1}>Message</TableCell>
+                          <TableCell align="center" colSpan={2}>Weight</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell align="center">Value</TableCell>
+                          <TableCell align="left">Description</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {increasingWin?.map(({ name, message, weight: { description, value}}, index) => (
+                          <StyledTableRow
+                          key={index}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">{name}</TableCell>
+                            <TableCell align="left">{message}</TableCell>
+                            <TableCell align="center">{value}</TableCell>
+                            <TableCell align="left">{description}</TableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              ) 
+              :(<Box sx={{ display: 'none'}}></Box>)}
+              
+              {decreasingWin ? (
+                <Box>
+                  <Typography align="center">Pilytix Factors Decreasing Win</Typography>
+                  <TableContainer component={Paper} sx={{ mb: 9 }}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="left" colSpan={1}>Name</TableCell>
+                          <TableCell align="left" colSpan={1}>Message</TableCell>
+                          <TableCell align="center" colSpan={2}>Weight</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell align="center">Value</TableCell>
+                          <TableCell align="left">Description</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {decreasingWin?.map(({ name, message, weight: { description, value}}, index) => (
+                          <StyledTableRow
+                          key={index}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
+                          >
+                            <TableCell component="th" scope="row">{name}</TableCell>
+                            <TableCell align="left">{message}</TableCell>
+                            <TableCell align="center">{value}</TableCell>
+                            <TableCell align="left">{description}</TableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              ) 
+              :(<Box sx={{ display: 'none'}}></Box>)}
+
+              {probHistory ? (
+                <Box>
+                  <Typography align="center">Probability History</Typography>
+                  <TableContainer component={Paper} sx={{ mb: 2, maxWidth: 450 }}>
+                    <Table sx={{ maxWidth: 450 }} aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align="left">Days Ago</TableCell>
+                          <TableCell align="center">Pilytix Probability</TableCell>
+                          <TableCell align="center">Rep Probability</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {probHistory?.map((row, index) => (
+                          <StyledTableRow
+                          key={index}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">{row.daysAgo}</TableCell>
+                            <TableCell align="center">{row.pilytixProb}</TableCell>
+                            <TableCell align="center">{row.repProb}</TableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              ) 
+              :(<Box sx={{ display: 'none'}}></Box>)}
+              
+              
+              {/* <VictoryChart domainPadding={{ x: 50 }} width={400} height={400}>
+                <VictoryGroup offset={10} style={{ data: { width: 15 } }}>
+                  <VictoryStack>
+                    
+                    <VictoryBar
+                      data={probHistory}
+                      x={probHistory.daysAgo}
+                      y={probHistory.pilytixProb}
+                    />
+                  </VictoryStack>
+                </VictoryGroup>
+              </VictoryChart> */}
+              
 
              {/*  <VictoryChart>
                 <VictoryGroup offset={20}>

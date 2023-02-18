@@ -1,6 +1,24 @@
 import React from 'react'
-import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled} from '@mui/material';
-import { VictoryBar, VictoryChart, VictoryTheme, VictoryGroup, VictoryStack} from 'victory';
+import {Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, styled, Grid} from '@mui/material';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -17,6 +35,38 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function DialogComponent({open, setOpen, opportunityInfo, probHistory, increasingWin, decreasingWin}) {
+
+  var data = {
+    labels: probHistory?.map( prob => prob.daysAgo),
+    datasets: [
+      {
+        label: 'Pilytix Probability',
+        data: probHistory?.map( prob => prob.pilytixProb),
+        backgroundColor: ['rgba(54, 162, 235, 0.2)'],
+        borderColor: ['rgba(54, 162, 235, 1)'],
+        borderWidth: 1
+      },
+      {
+        label: 'Rep Probability',
+        data: probHistory?.map( prob => prob.repProb),
+        backgroundColor: ['rgba(255, 159, 64, 0.2)'],
+        borderColor: ['rgba(255, 159, 64, 1)'],
+        borderWidth: 1
+      }
+
+    ]
+  };
+
+  var options = {
+    maintainAspectRatio: false,
+    scales: {
+    },
+    legend: {
+      labels: {
+        fontSize: 25,
+      },
+    },
+  }
 
   return (
     <Dialog 
@@ -133,75 +183,45 @@ function DialogComponent({open, setOpen, opportunityInfo, probHistory, increasin
         :(<Box sx={{ display: 'none'}}></Box>)}
 
         {probHistory ? (
-          <Box>
+          <Box sx={{ width: '100%' }}>
             <Typography align="center">Probability History</Typography>
-            <TableContainer component={Paper} sx={{ mb: 2, maxWidth: 450 }}>
-              <Table sx={{ maxWidth: 450 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Days Ago</TableCell>
-                    <TableCell align="center">Pilytix Probability</TableCell>
-                    <TableCell align="center">Rep Probability</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {probHistory?.map((row, index) => (
-                    <StyledTableRow
-                    key={index}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">{row.daysAgo}</TableCell>
-                      <TableCell align="center">{row.pilytixProb}</TableCell>
-                      <TableCell align="center">{row.repProb}</TableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid item xs={12} md={6}>
+                <TableContainer component={Paper} sx={{ mb: 2, maxHeight: 440 }}>
+                  <Table stickyHeader sx={{ minWidth: 350 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="left">Days Ago</TableCell>
+                        <TableCell align="center">Pilytix Probability</TableCell>
+                        <TableCell align="center">Rep Probability</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {probHistory?.reverse().map((row, index) => (
+                        <StyledTableRow
+                        key={index}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">{row.daysAgo}</TableCell>
+                          <TableCell align="center">{row.pilytixProb}</TableCell>
+                          <TableCell align="center">{row.repProb}</TableCell>
+                        </StyledTableRow>
+                      )).reverse()}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Bar
+                  height={400}
+                  data={data}
+                  options={options}
+                />
+              </Grid>
+            </Grid>
           </Box>
         ) 
         :(<Box sx={{ display: 'none'}}></Box>)}
-        
-        
-        {/* <VictoryChart domainPadding={{ x: 50 }} width={400} height={400}>
-          <VictoryGroup offset={10} style={{ data: { width: 15 } }}>
-            <VictoryStack>
-              
-              <VictoryBar
-                data={probHistory}
-                x={probHistory.daysAgo}
-                y={probHistory.pilytixProb}
-              />
-            </VictoryStack>
-          </VictoryGroup>
-        </VictoryChart> */}
-        
-
-        {/*  <VictoryChart>
-          <VictoryGroup offset={20}>
-            <VictoryStack>
-              <VictoryBar
-              data={probHistory}
-              x="daysAgo"
-              y="pilytixProb"
-              />
-            </VictoryStack>
-            <VictoryStack>
-              <VictoryBar
-              data={probHistory}
-              x="daysAgo"
-              y="repProb"
-              />
-            </VictoryStack>
-            <VictoryStack>
-              <VictoryBar
-              data={probHistory}
-              x="daysAgo"
-              y="pilytixProb"
-              />
-            </VictoryStack>
-          </VictoryGroup>
-        </VictoryChart> */}
       </DialogContent>
       <DialogActions>
         <Button onClick={()=> setOpen(false)}>Close</Button>

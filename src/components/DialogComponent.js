@@ -75,7 +75,7 @@ function DialogComponent({open, setOpen, opportunityInfo, probHistory, increasin
     fullWidth
     maxWidth='lg'
     aria-labelledby="dialog-title" aria-describedby="dialog-description">
-      <DialogTitle id='dialog-title' align="center">Opp Id: {opportunityInfo.oppId}</DialogTitle>
+      <DialogTitle id='dialog-title' align="center">{opportunityInfo.oppName}</DialogTitle>
       <DialogContent>
         <Box>
           <TableContainer component={Paper} sx={{ mb: 9 }}>
